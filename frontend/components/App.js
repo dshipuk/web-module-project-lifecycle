@@ -27,31 +27,24 @@ export default class App extends React.Component {
           todos: res.data.data
         })
       })
-      .catch(err => {
-        this.setState({
-          ...this.state,
-          error: err.response.data.message
-        })
-      });
+      .catch(this.setAxiosResponseError);
   }
+
+  resetForm = () => this.setState({
+    ...this.state,
+    toDoNameInput: ""
+  })
+  
+  setAxiosResponseError = err => this.setState({ ...this.state, error: err.response.data.message})
 
   postNewTodo = () => {
     axios.post(URL, { name: this.state.toDoNameInput })
       .then(res => {
         console.log(res)
         this.fetchAllTodos()
-        this.setState({
-          ...this.state,
-          toDoNameInput: ''
-        })
+        this.resetForm()
       })
-      .catch(err => {
-        console.error(err)
-        this.setState({
-          ...this.state,
-          error: err.response.data.message
-        })
-      })
+      .catch(this.setAxiosResponseError)
   }
 
   componentDidMount() {
